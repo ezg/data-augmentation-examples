@@ -26,13 +26,15 @@ def estimate(df, target, model, score):
 
 
 
-df_pop = pd.read_csv('population.csv').drop('N', axis=1)
-df_pov = pd.read_csv('poverty.csv')
-df = df_pov.set_index('FIPS').join(df_pop.set_index('FIPS'))
+df_learn = pd.read_csv('learningData.csv')
+df_exo = pd.read_csv('expenses_clean.csv')
+df = df_exo.set_index('UNITID').join(df_learn.set_index('UNITID'))
 
-r1 = estimate(df, 'POVALL_2016', RandomForestRegressor(), 'neg_mean_absolute_error')
-r2 = estimate(df_pov, 'POVALL_2016', RandomForestRegressor(), 'neg_mean_absolute_error')
+r1 = estimate(df, 'DEBT_EARNINGS_RATIO', RandomForestRegressor(), 'neg_mean_absolute_error')
+r2 = estimate(df_learn, 'DEBT_EARNINGS_RATIO', RandomForestRegressor(), 'neg_mean_absolute_error')
 
 print('neg-RSME (higher better):')
 print('augmented score : ', r1)
 print('base score : ', r2)
+
+print(len(df), len(df_learn))
